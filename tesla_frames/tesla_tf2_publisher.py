@@ -26,7 +26,6 @@ import rclpy
 from rclpy.node import Node
 from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
 from geometry_msgs.msg import TransformStamped
-import tf_transformations
 
 
 class TeslaTf2Publisher(Node):
@@ -43,7 +42,7 @@ class TeslaTf2Publisher(Node):
         base_link_to_footprint.child_frame_id = "base_link"
         base_link_to_footprint.transform.translation.x = 0.0
         base_link_to_footprint.transform.translation.y = 0.0
-        base_link_to_footprint.transform.translation.z = 1.0
+        base_link_to_footprint.transform.translation.z = 0.7215
         base_link_to_footprint.transform.rotation.w = 1.0  # No rotation
 
         # IMU to Base Link (same position as base_link)
@@ -51,9 +50,9 @@ class TeslaTf2Publisher(Node):
         imu_to_base_link.header.stamp = self.get_clock().now().to_msg()
         imu_to_base_link.header.frame_id = "base_link"
         imu_to_base_link.child_frame_id = "imu"
-        imu_to_base_link.transform.translation.x = 0.0
+        imu_to_base_link.transform.translation.x = 0.517  # 183 from the car's front bumper
         imu_to_base_link.transform.translation.y = 0.0
-        imu_to_base_link.transform.translation.z = 0.0
+        imu_to_base_link.transform.translation.z = -0.7215 + 0.6
         imu_to_base_link.transform.rotation.w = 1.0  # No rotation
 
         # Velodyne to Base Link
@@ -61,15 +60,27 @@ class TeslaTf2Publisher(Node):
         velodyne_to_base_link.header.stamp = self.get_clock().now().to_msg()
         velodyne_to_base_link.header.frame_id = "base_link"
         velodyne_to_base_link.child_frame_id = "velodyne"
-        velodyne_to_base_link.transform.translation.x = 0.0
+        velodyne_to_base_link.transform.translation.x = 0.052
         velodyne_to_base_link.transform.translation.y = 0.0
-        velodyne_to_base_link.transform.translation.z = 0.65  # 65 cm
+        velodyne_to_base_link.transform.translation.z = 0.8385
         velodyne_to_base_link.transform.rotation.w = 1.0  # No rotation
+
+        # camera 128, 73
+        cam_left_to_base_link = TransformStamped()
+        cam_left_to_base_link.header.stamp = self.get_clock().now().to_msg()
+        cam_left_to_base_link.header.frame_id = "base_link"
+        cam_left_to_base_link.child_frame_id = "cam_left"
+        cam_left_to_base_link.transform.translation.x = 2.347 - 1.28
+        cam_left_to_base_link.transform.translation.y = 0.896
+        cam_left_to_base_link.transform.translation.z = -0.7215 + 0.73
+        cam_left_to_base_link.transform.rotation.w = 1.0  # No rotation
 
         # Broadcast the static transforms
         self.broadcaster.sendTransform(
-            [base_link_to_footprint, imu_to_base_link, velodyne_to_base_link]
+            [base_link_to_footprint, imu_to_base_link, velodyne_to_base_link, cam_left_to_base_link]
         )
+
+        self.get_logger().info("Published static transforms from Tesla model 3")
 
 
 def main(args=None):

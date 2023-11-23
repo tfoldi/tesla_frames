@@ -39,13 +39,13 @@ class TeslaMarkersNode(Node):
 
     def timer_callback(self):
         marker = Marker()
-        marker.header.frame_id = "base_link"
+        marker.header.frame_id = "base_footprint"
         marker.header.stamp = self.get_clock().now().to_msg()
         marker.id = 0
         marker.type = Marker.MESH_RESOURCE
         marker.action = Marker.ADD
 
-        marker.pose.position.x = 0.0
+        marker.pose.position.x = -0.8
         marker.pose.position.y = 0.0
         marker.pose.position.z = 0.0
 
@@ -63,13 +63,11 @@ class TeslaMarkersNode(Node):
         marker.color.g = 1.0
         marker.color.b = 1.0
 
-        marker.mesh_resource = (
-            "https://s3.amazonaws.com/starschema.cdn/tfoldi/tesla_model_3.glb"
-        )
+        marker.mesh_resource = "https://s3.amazonaws.com/starschema.cdn/tfoldi/tesla_model_3.glb"
         marker.mesh_use_embedded_materials = True
 
         self.publisher_.publish(marker)
-        self.get_logger().info("Publishing tesla mesh on base_link")
+        # self.get_logger().info("Publishing tesla mesh on base_link")
 
 
 def main(args=None):
