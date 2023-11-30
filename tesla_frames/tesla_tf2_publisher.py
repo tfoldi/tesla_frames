@@ -25,7 +25,27 @@
 import rclpy
 from rclpy.node import Node
 from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
-from geometry_msgs.msg import TransformStamped
+from geometry_msgs.msg import TransformStamped, Quaternion
+import math
+
+
+def quaternion_from_euler(roll, pitch, yaw):
+    """
+    Converts euler roll, pitch, yaw to quaternion
+    """
+    cy = math.cos(yaw * 0.5)
+    sy = math.sin(yaw * 0.5)
+    cp = math.cos(pitch * 0.5)
+    sp = math.sin(pitch * 0.5)
+    cr = math.cos(roll * 0.5)
+    sr = math.sin(roll * 0.5)
+
+    q = Quaternion()
+    q.w = cy * cp * cr + sy * sp * sr
+    q.x = cy * cp * sr - sy * sp * cr
+    q.y = sy * cp * sr + cy * sp * cr
+    q.z = sy * cp * cr - cy * sp * sr
+    return q
 
 
 class TeslaTf2Publisher(Node):
@@ -73,11 +93,27 @@ class TeslaTf2Publisher(Node):
         cam_left_to_base_link.transform.translation.x = 2.347 - 1.28
         cam_left_to_base_link.transform.translation.y = 0.896
         cam_left_to_base_link.transform.translation.z = -0.7215 + 0.73
-        cam_left_to_base_link.transform.rotation.w = 1.0  # No rotation
+        cam_left_to_base_link.transform.rotation = quaternion_from_euler(0, 0, math.radians(135))
+
+        # camera 128, 73
+        cam_right_to_base_link = TransformStamped()
+        cam_right_to_base_link.header.stamp = self.get_clock().now().to_msg()
+        cam_right_to_base_link.header.frame_id = "base_link"
+        cam_right_to_base_link.child_frame_id = "cam_right"
+        cam_right_to_base_link.transform.translation.x = 2.347 - 1.28
+        cam_right_to_base_link.transform.translation.y = -0.896
+        cam_right_to_base_link.transform.translation.z = -0.7215 + 0.73
+        cam_right_to_base_link.transform.rotation = quaternion_from_euler(0, 0, math.radians(-135))
 
         # Broadcast the static transforms
         self.broadcaster.sendTransform(
-            [base_link_to_footprint, imu_to_base_link, velodyne_to_base_link, cam_left_to_base_link]
+            [
+                base_link_to_footprint,
+                imu_to_base_link,
+                velodyne_to_base_link,
+                cam_left_to_base_link,
+                cam_right_to_base_link,
+            ]
         )
 
         self.get_logger().info("Published static transforms from Tesla model 3")

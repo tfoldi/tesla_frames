@@ -29,10 +29,10 @@ def generate_launch_description():
     os.environ["FILE_PATH"] = str(parameters_file_dir)
     return LaunchDescription(
         [
-            launch.actions.DeclareLaunchArgument("output_final_position", default_value="false"),
-            launch.actions.DeclareLaunchArgument(
-                "output_location", default_value="~/dual_ekf_navsat_debug.txt"
-            ),
+            # launch.actions.DeclareLaunchArgument("output_final_position", default_value="false"),
+            # launch.actions.DeclareLaunchArgument(
+            #     "output_location", default_value="~/dual_ekf_navsat_debug.txt"
+            # ),
             launch_ros.actions.Node(
                 package="tesla_frames",
                 executable="tesla_markers_node",
