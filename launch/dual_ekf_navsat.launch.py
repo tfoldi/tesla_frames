@@ -46,6 +46,13 @@ def generate_launch_description():
                 output="screen",
             ),
             launch_ros.actions.Node(
+                package="imu_filter_madgwick",
+                executable="imu_filter_madgwick_node",
+                name="imu_filter_madgwick",
+                output="screen",
+                remappings=[("imu/data_raw", "imu"), ("imu/mag", "magnetometer")],
+            ),
+            launch_ros.actions.Node(
                 package="robot_localization",
                 executable="ekf_node",
                 name="ekf_filter_node_odom",

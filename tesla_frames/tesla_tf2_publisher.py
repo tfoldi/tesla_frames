@@ -75,6 +75,16 @@ class TeslaTf2Publisher(Node):
         imu_to_base_link.transform.translation.z = -0.7215 + 0.6
         imu_to_base_link.transform.rotation.w = 1.0  # No rotation
 
+        # ublox gps to Base Link (same position as base_link)
+        ubx_to_base_link = TransformStamped()
+        ubx_to_base_link.header.stamp = self.get_clock().now().to_msg()
+        ubx_to_base_link.header.frame_id = "base_link"
+        ubx_to_base_link.child_frame_id = "ubx"
+        ubx_to_base_link.transform.translation.x = 0.0
+        ubx_to_base_link.transform.translation.y = 0.0
+        ubx_to_base_link.transform.translation.z = 0.0
+        ubx_to_base_link.transform.rotation.w = 1.0  # No rotation
+
         # Velodyne to Base Link
         velodyne_to_base_link = TransformStamped()
         velodyne_to_base_link.header.stamp = self.get_clock().now().to_msg()
@@ -110,6 +120,7 @@ class TeslaTf2Publisher(Node):
             [
                 base_link_to_footprint,
                 imu_to_base_link,
+                ubx_to_base_link,
                 velodyne_to_base_link,
                 cam_left_to_base_link,
                 cam_right_to_base_link,
