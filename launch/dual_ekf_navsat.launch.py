@@ -76,7 +76,7 @@ def generate_launch_description():
                 parameters=[parameters_file_path],
                 remappings=[
                     ("imu/data", "imu"),
-                    ("gps/fix", "navsat/fix"),
+                    ("gps/fix", "fix"),
                     ("gps/filtered", "gps/filtered"),
                     ("odometry/gps", "odometry/gps"),
                     ("odometry/filtered", "odometry/global"),
