@@ -2,3 +2,4 @@ build
 *.pyc
 .vscode
 
+tesla_frames/tesla_frames.code-workspace
