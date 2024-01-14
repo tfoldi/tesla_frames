@@ -16,7 +16,9 @@ ekf_filter_node_odom:
                   true, true, true,
                   false, false, false]
                   
-    imu0_queue_size: 100
+    imu0_queue_size: 10
+      #    imu0_differential: true
+      #    imu0_relative: true
 
     twist0: "vel"
     twist0_config: [false, false, false,
@@ -24,11 +26,11 @@ ekf_filter_node_odom:
                        true, false, false,
                        false, false, false,
                        false, false, false]
-
+                       #    twist0_differential: true
 
     # Frequency and delay of the sensor data
     frequency: 30.0                  # Frequency of the filter update
-    sensor_timeout: 2.1            # Timeout for sensors data
+      #sensor_timeout: 2.1            # Timeout for sensors data
     two_d_mode: true # Enable 2D mode if you're working in a 2D plane
     reset_on_time_jump: true
     imu0_remove_gravitational_acceleration: true
@@ -41,15 +43,17 @@ ekf_filter_node_map:
     odom_frame: "odom"             # Name of the odometry frame
     base_link_frame: "base_footprint"   # Name of the frame attached to the mobile base
     world_frame: "map"            # The frame to which data will be transformed
-    base_link_output_frame: "base_from_map"   # Name of the frame attached to the mobile base
 
     imu0: "imu"               # Topic for IMU data
     imu0_config: [false, false, false,
+                  false, false, false,
+                  false, false, false,
                   true, true, true,
-                  false, false, false,
-                  false, false, false,
                   false, false, false]
-    imu0_queue_size: 100
+    imu0_queue_size: 10
+    imu0_differential: true
+      #imu0_relative: true
+
 
     twist0: "vel"
     twist0_config: [false, false, false,
@@ -57,9 +61,9 @@ ekf_filter_node_map:
                        true, false, false,
                        false, false, false,
                        false, false, false]
-    twist0_differential: false
+    twist0_differential: true
     twist0_relative: false
-    twist0_queue_size: 100
+    twist0_queue_size: 10
 
     odom0: odometry/gps
     odom0_config: [true,  true,  false,
@@ -67,7 +71,7 @@ ekf_filter_node_map:
                   false, false, false,
                   false, false, false,
                   false, false, false]
-    odom0_queue_size: 100
+    odom0_queue_size: 10
     odom0_differential: false
     odom0_relative: false
 
@@ -76,10 +80,6 @@ ekf_filter_node_map:
     frequency: 30.0                  # Frequency of the filter update
     two_d_mode: true # Enable 2D mode if you're working in a 2D plane
     reset_on_time_jump: true
-
-    transform_time_offset: 0.0
-    transform_timeout: 0.0
-    print_diagnostics: true
 
     imu0_remove_gravitational_acceleration: true
 
@@ -90,6 +90,6 @@ navsat_transform:
     magnetic_declination_radians: 0.0983
     broadcast_utm_transform: true
     publish_filtered_gps: true
-    #use_odometry_yaw: false
+    use_odometry_yaw: true
     wait_for_datum: false
-    #datum: [47.634648, 19.153497, 0.0]
+    datum: [47.634648, 19.153497, 0.0]
