@@ -80,9 +80,9 @@ class TeslaTf2Publisher(Node):
         ubx_to_base_link.header.stamp = self.get_clock().now().to_msg()
         ubx_to_base_link.header.frame_id = "base_link"
         ubx_to_base_link.child_frame_id = "ubx"
-        ubx_to_base_link.transform.translation.x = 0.0
+        ubx_to_base_link.transform.translation.x = 1.1
         ubx_to_base_link.transform.translation.y = 0.0
-        ubx_to_base_link.transform.translation.z = 0.0
+        ubx_to_base_link.transform.translation.z = 0.2
         ubx_to_base_link.transform.rotation.w = 1.0  # No rotation
 
         # Velodyne to Base Link
@@ -115,6 +115,28 @@ class TeslaTf2Publisher(Node):
         cam_right_to_base_link.transform.translation.z = -0.7215 + 0.73
         cam_right_to_base_link.transform.rotation = quaternion_from_euler(0, 0, math.radians(-135))
 
+        # Camere front to Base Link
+        cam_front_to_base_link = TransformStamped()
+        cam_front_to_base_link.header.stamp = self.get_clock().now().to_msg()
+        cam_front_to_base_link.header.frame_id = "base_link"
+        cam_front_to_base_link.child_frame_id = "cam_front"
+        cam_front_to_base_link.transform.translation.x = 0.4
+        cam_front_to_base_link.transform.translation.y = 0.0
+        cam_front_to_base_link.transform.translation.z = -0.7215 + 1.3
+        cam_front_to_base_link.transform.rotation.w = 1.0  # No rotation
+
+        # Camera back to Base Link
+        cam_back_to_base_link = TransformStamped()
+        cam_back_to_base_link.header.stamp = self.get_clock().now().to_msg()
+        cam_back_to_base_link.header.frame_id = "base_link"
+        cam_back_to_base_link.child_frame_id = "cam_back"
+        cam_back_to_base_link.transform.translation.x = -2.347 + 0.025
+        cam_back_to_base_link.transform.translation.y = 0.0
+        cam_back_to_base_link.transform.translation.z = -0.7215 + 0.772
+        cam_back_to_base_link.transform.rotation = quaternion_from_euler(
+            0, math.radians(45), math.radians(180)
+        )
+
         # Broadcast the static transforms
         self.broadcaster.sendTransform(
             [
@@ -124,6 +146,8 @@ class TeslaTf2Publisher(Node):
                 velodyne_to_base_link,
                 cam_left_to_base_link,
                 cam_right_to_base_link,
+                cam_back_to_base_link,
+                cam_front_to_base_link,
             ]
         )
 
